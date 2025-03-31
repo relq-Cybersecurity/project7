@@ -1,6 +1,6 @@
 # Cloud Security / Cloud DevOps / Sys Admin
 
-I want to start with a simple Terraform script to deploy a hardened Linux server on AWS, or are you looking for a more complex setup with networking, security groups, and automated configurations
+## I want to start with a simple Terraform script to deploy a hardened Linux server on AWS, or are you looking for a more complex setup with networking, security groups, and automated configurations
 
 **1.Install Terraform and AWS CLI**
 
@@ -159,3 +159,12 @@ Then, run:
 terraform apply -auto-approve
 
 ```
+Enter the new username when prompted.
+
+Follow the SSH key generation steps.
+
+```
+chmod +x create_user.sh
+sudo ./create_user.sh
+```
+
