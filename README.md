@@ -159,12 +159,86 @@ Then, run:
 terraform apply -auto-approve
 
 ```
-Enter the new username when prompted.
+## Here’s a clear and complete documentation for your Bash script that automates the process of creating a new user with SSH key authentication on a Linux system:
 
-Follow the SSH key generation steps.
+✅ Purpose of **create_user.sh**
+
+This script automates the process of:
+
+Creating a new user on a Linux system
+
+Adding the user to a specific group (devs)
+
+Setting up secure SSH key-based authentication
+
+Locking the user's password to enforce SSH-only login
+
+
+📌 Prerequisites
+
+Must be run as root or with sudo privileges
+
+ssh-keygen must be available on the system
+
+Script is designed for systems using /home/username user directories
+
+
+⚙️ What It Does
+
+**1. Prompt for Username**
+
+Prompts the administrator to enter a new username.
+
+**2. Check/Create Group (``devs```)**
+
+Ensures that the group ```devs``` exists. If not, it creates it.
+
+**3. Create User and Add to Group**
+
+Adds the new user and assigns them to the ```devs``` group.
+
+**4. Create ```.ssh``` Directory**
+
+Creates ```/home/username/.ssh```
+
+Sets permissions to ```700```
+
+Changes ownership to the user
+
+**5. Generate SSH Key Pair**
+
+Generates an RSA 4096-bit key pair in the user's ```.ssh``` directory
+
+Key files: ```id_rsa``` (private), ```id_rsa.pub``` (public)
+
+**6.Configure authorized_keys**
+
+Copies ```id_rsa.pub``` to ```authorized_keys```
+
+Sets secure permissions: ```600```
+
+**7. Lock Password Login**
+
+Disables password login using ```passwd -l``` to enforce key-based authentication
+
+**8. Final Output**
+
+Notifies the admin that the user has been successfully created
+
+Displays a message with the location of the private SSH key
+
+**🔐 Security Notes**
+
+The private key should never be shared
+
+You may want to export or store the private key securely after creation
+
+Ensure only root/admins can run this script
 
 ```
 chmod +x create_user.sh
 sudo ./create_user.sh
 ```
+You’ll be prompted to enter a username. The rest is automated.
+
 
