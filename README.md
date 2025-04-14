@@ -242,3 +242,47 @@ sudo ./create_user.sh
 You’ll be prompted to enter a username. The rest is automated.
 
 
+
+**********************************
+1.Connecting to Server with SSH
+
+Type the line below into Terminal in your physicall machin.
+
+```
+ssh <username>>@<ip-address> -p 42
+```
+
+For first let's install other softs that we need docker docker-compose
+
+```
+apt install -y sudo docker docker-compose make openbox xinit kitty firefox-esr
+```
+Configuring user
+Add user to sudo and docker group.
+
+```usermod -aG sudo <username> ```    ```usermod -aG docker <username>```
+
+Verify whether user was successfully added to sudo and docker group.
+
+```getent group sudo```
+
+Step 5: Configuring sudo
+⚠️You risk to loose your project if you type something else in this file and saved it⚠️
+
+```vim /etc/sudoers```
+
+🛡️If you type something wrong, it will show you the error and ask for saving like that🛡️
+
+```sudo visudo /etc/sudoers```
+
+Add user to root privilege
+
+```<username> ALL=(ALL:ALL) ALL```
+
+```reboot``` for changes to take effect.
+
+Switch to user, from now we will work with sudo user.
+
+```su <username>```
+
+```cd ~/```
