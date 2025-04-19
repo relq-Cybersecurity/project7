@@ -420,17 +420,135 @@ WordPress and MariaDB passwords should be stored in .env.
 
 NGINX should block access to hidden files (e.g. .ht*).
 
+#### Docker Compose Documentation
 
-**my sequence of steps was as follows**
+This Compose file defines a small infrastructure with four main services:
 
-1. nginx image, Dockerfile for container and generate_cert.sh for certificates
+certs: generates SSL certificates
+
+nginx: reverse proxy serving over HTTP/HTTPS
+
+mariadb: database for WordPress
+
+php: PHP-FPM container for WordPress
+
+🧱 Key Concepts
+Volumes:
+
+wordpress_data holds WordPress website content (shared between php and nginx).
+
+db_data is used for persistent MariaDB and WordPress data.
+
+Custom SSL Generation:
+
+The certs container runs a script (/generate_cert.sh) to generate certs and share them with nginx.
+
+Custom Builds:
+
+nginx and php services are built from local Dockerfiles.
+
+Dependencies:
+
+depends_on ensures service startup order but does not wait for full readiness—use healthchecks for that if needed.
+
+What is worth remembering
+
+The left is always the path to your system.
+
+The right is the visible path inside the container.
+
+This way you can pass secrets to the container without writing them in the code.
+
+#### **my sequence of steps was as follows**
+
+1. nginx image, Dockerfile for container and generate_cert.sh for certificates and  add to the corresponding service in docker-compos.yml
    
+   📄 generate_cert.sh – SSL Certificate Generation Script
+     🔐 Purpose
+        Generates a self-signed SSL certificate and private key for use with NGINX. Intended for internal or development use where a trusted CA certificate           is not required.
+   Notes
+The certificate is valid for 365 days.
+
+-nodes skips the passphrase for the private key (needed for non-interactive services like NGINX).
+
+Adjust the -subj fields to match your environment or domain if not using localhost.
+
+This script is intended to be run automatically during container initialization (entrypoint in Docker Compose).
+
 2.mariadb image and Dockerfile for contenier , make checking for database
 
 ```docker exec -it mariadb mysql -u root -p``` (it will ask for rootpassword, which is specified in MARIADB_ROOT_PASSWORD by .env file) then ```SHOW DATABASES;``` you see table. 
 You are now inside MariaDB, and you can see your automatically created database, mydb. At this point, you have a fully functional setup.
 
 3.php_fpm image , Dockerfile for container and generate_cert.sh for wordpress setings
+
+📄 entrypoint.sh – WordPress Auto-Installer for Docker
+✅ Purpose
+This script:
+
+Waits for MariaDB to be ready
+
+Loads environment variables from .env
+
+Downloads and installs WordPress if it's not already set up
+
+Updates WordPress site URLs
+
+Adds reverse proxy support (e.g. for Amazon ALB or NGINX)
+
+🔧 What It Does
+1. Wait for MariaDB. 
+```
+until mysqladmin ping -h"mariadb" --silent; do
+    sleep 1
+done
+```
+Ensures MariaDB is reachable before continuing.
+
+2. Set Working Directory
+   ```cd /var/www/html```   WordPress files are managed here.
+   
+3. Load Environment Variables  from .env, excluding commented lines.
+   
+   ```
+   if [ -f /inception/.env ]; then
+    export $(grep -v '^#' /inception/.env | xargs)
+   fi
+
+   ```
+
+4.Install WordPress. Only installs if not already set up (wp-config.php is the flag).
+```
+if [ ! -f wp-config.php ]; then
+    wp core download --allow-root
+    wp config create --dbname=... --allow-root
+    wp core install --url=... --allow-root
+else
+    echo "✅ WordPress already installed"
+fi
+```
+5.Update Site URL (dynamic IPs or reverse proxy)
+```
+wp option update home "$WP_URL" --allow-root
+wp option update siteurl "$WP_URL" --allow-root
+```
+Ensures WordPress URL is correct, even if IP or domain changed.
+
+6. Enable Reverse Proxy Support
+   ```
+   if ! grep -q "\$_SERVER\['HTTP_X_FORWARDED_FOR'\]" wp-config.php; then
+    echo "// Allowing real IP behind Amazon reverse proxy"
+    echo "if (isset(\$_SERVER['HTTP_X_FORWARDED_FOR'])) {"
+    echo "    \$_SERVER['REMOTE_ADDR'] = \$_SERVER['HTTP_X_FORWARDED_FOR'];"
+    echo "}"
+   fi
+
+   ```
+   Adds logic to extract real IP when behind a reverse proxy (e.g. NGINX or AWS ALB).
+   
+7. Run the Container's Command
+   
+   ```exec "$@"```   Ensures the container runs the command passed by Docker (good practice).
 
 🧠 The main idea
  WordPress requires 3 things:
@@ -479,7 +597,18 @@ The WordPress volume stores the site data, code, and images (/var/www/html).
 The MariaDB volume stores the database data (/var/lib/mysql).
 
 So, it turns out that all the necessary files for storing data (the WordPress database and files, and the MariaDB data) are stored in a special db_data folder defined by you.
+#### Setting passwords in clear text is unacceptable from a security perspective, especially if your project will one day go into production or be posted on GitHub.
 
+Best practice:
+
+1. creat .env file
+   
+   Your passwords are not visible in plain text in the Compose file.
+   You can easily change the credentials in the .env file.
+   Your code looks much more production-ready.
+   
+2. And most importantly, add the .env file to your .gitignore so that GitHub doesn't come up.
+   
 #### You DO NOT need to store the contents of your Docker db volumes on GitHub. They are regenerated when you run setup again. Focus only on your:
 
 Dockerfiles
@@ -533,10 +662,10 @@ docker stop $(docker ps -aq)
 docker rm $(docker ps -aq)
 ```
 
-5.Delete all images (if necessary)
-```
-docker rmi $(docker images -q)
-```
+5.Delete all images (if necessary)  **forcibly**
+
+```docker rmi -f $(docker images -q)``` or ```docker rmi -f <IMAGE_ID>```
+
 
 6.Delete all volumes
 
