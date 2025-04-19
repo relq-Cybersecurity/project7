@@ -286,3 +286,49 @@ Switch to user, from now we will work with sudo user.
 ```su <username>```
 
 ```cd ~/```
+##   This project involves setting up a small infrastructure composed of different services under specific rules. The whole project has to be done in a virtual machine
+📘 Fundamental Terminology
+```Term | Definition
+Docker | A platform for developing, shipping, and running applications inside containers, providing isolation and consistency.
+Docker Container | A lightweight, standalone, and executable package that includes everything needed to run an application: code, runtime, libraries, etc.
+Docker Image | A snapshot (template) used to create containers. It contains the application code and dependencies.
+Dockerfile | A script file that contains instructions to build a Docker image (e.g., OS, packages, copy files, etc.).
+Docker Compose | A tool for defining and managing multi-container Docker applications using a YAML file (docker-compose.yml).
+Service | In Docker Compose, a service is a definition of a container. It defines what image to use, ports, volumes, environment, etc.
+Volume | A persistent storage space used by Docker containers. Volumes keep data even if the container is deleted.
+Network (Docker) | A virtual network that allows containers to communicate with each other securely by name.
+NGINX | A high-performance web server that can serve static content and act as a reverse proxy, load balancer, and HTTPS enforcer.
+TLS (Transport Layer Security) | A cryptographic protocol used to secure communication over a network (successor to SSL). Versions TLSv1.2 and TLSv1.3 are considered secure.
+WordPress | A popular open-source content management system (CMS) for building websites and blogs.
+PHP-FPM (FastCGI Process Manager) | A PHP interpreter optimized for performance. It allows PHP code (like WordPress) to run inside its own container.
+MariaDB | An open-source relational database system (fork of MySQL) used by WordPress to store data.
+Makefile | A script with commands used by the make utility to automate building, running, and managing projects.
+Virtual Machine (VM) | An emulated computer system running its own OS, used for isolation or simulation of an environment.
+.env File | A file used to store environment variables like database credentials, ports, and domain names in a secure way.
+
+```
+You must use
+
+Docker Compose.
+Each Docker image must have the same name as its corresponding service.
+Each service has to run in a dedicated container.
+For performance reasons, the containers must be built from either the penultimate stable
+version of Alpine or Debian. The choice is yours.
+You also have to write your own Dockerfiles, one per service. The Dockerfiles must
+be called in your docker-compose.yml by your Makefile.
+You then have to set up:
+
+• A Docker container that contains NGINX with TLSv1.2 or TLSv1.3 only.
+
+• A Docker container that contains WordPress with php-fpm (it must be installed
+and configured) only, without nginx.
+
+• A Docker container that contains only MariaDB, without nginx.
+
+• A volume that contains your WordPress database.
+
+• A second volume that contains your WordPress website files.
+
+• A docker-network that establishes the connection between your containers.
+
+Your containers must restart automatically
