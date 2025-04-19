@@ -1,0 +1,12 @@
+# Ignore DB and WordPress volumes
+inception/db_data/
+inception/wordpress_data/
+
+# Ignore SSL certs
+inception/nginx/ssl/
+
+# Ignore env files (sensitive info)
+inception/.env
+
+# Ignore system files
+*.DS_Store

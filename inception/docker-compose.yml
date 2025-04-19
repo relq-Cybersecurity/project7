@@ -1,0 +1,66 @@
+version: '3'
+services:
+
+  certs:
+    build: ./nginx
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl
+    entrypoint: ["bash", "/generate_cert.sh"]
+    networks:
+      - mynetwork
+
+  nginx:
+    build: ./nginx/
+    ports:
+      - "8080:8080"
+      - "4343:4343"
+    volumes:
+      - ./db_data/wordpress_data:/var/www/html
+      - ./nginx/html:/usr/share/nginx/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - certs
+      - mariadb
+      - php
+    networks:
+      - mynetwork
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./db_data/mariadb:/var/lib/mysql
+     # - db_data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  php:
+    build: ./php
+    container_name: php
+    restart: always
+    volumes:
+      - ./db_data/wordpress_data:/var/www/html
+#      - ./wordpress_data:/var/www/html
+      - ./php/entrypoint.sh:/entrypoint.sh
+      - ./.env:/inception/.env
+    networks:
+      - mynetwork
+    depends_on:
+      - mariadb
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+ wordpress_data:
+ db_data:
+
+
