@@ -307,16 +307,17 @@ Switch to user, from now we will work with sudo user.
 **.env File** | A file used to store environment variables like database credentials, ports, and domain names in a secure way.
 
 ```
-You must use
+I used
 
 Docker Compose.
-Each Docker image must have the same name as its corresponding service.
+Each Docker image  have the same name as its corresponding service.
 Each service has to run in a dedicated container.
 For performance reasons, the containers must be built from either the penultimate stable
-version of Alpine or Debian. The choice is yours.
-You also have to write your own Dockerfiles, one per service. The Dockerfiles must
-be called in your docker-compose.yml by your Makefile.
-You then have to set up:
+version of Alpine or Debian. 
+I also  writed Dockerfiles, one per service. The Dockerfiles must
+be called in my docker-compose.yml by your Makefile.
+
+ **The project is set up according to these points**
 
 • A Docker container that contains NGINX with TLSv1.2 or TLSv1.3 only.
 
@@ -331,4 +332,92 @@ and configured) only, without nginx.
 
 • A docker-network that establishes the connection between your containers.
 
-Your containers must restart automatically
+ containers must restart automatically
+
+ 🧱 Service Breakdown
+ 
+1. NGINX (TLS)
+   
+Runs only NGINX
+
+Configured to support only TLSv1.2 or TLSv1.3
+
+Uses a self-signed certificate or Let's Encrypt
+
+Acts as a reverse proxy for WordPress
+
+2. WordPress (with PHP-FPM)
+   
+No NGINX inside this container
+
+Uses PHP-FPM to serve WordPress
+
+Communicates with MariaDB
+
+Uses a volume for site files
+
+3. MariaDB
+   
+Runs only the MariaDB service
+
+No web server included
+
+Stores WordPress data
+
+Uses a volume for the database files
+
+🗃️ Volumes
+
+Volume 1: /var/lib/mysql → stores MariaDB data
+
+Volume 2: /var/www/html → stores WordPress site files
+
+🌐 Network
+
+A custom Docker network is used to connect NGINX, WordPress, and MariaDB
+
+Ensures services communicate securely and by name
+
+🔁 Restart Policy
+
+All services must include the following in docker-compose.yml:
+
+
+📁 File Structure
+```
+inception/
+│
+├── docker-compose.yml
+├── Makefile
+├── nginx/
+│   ├── Dockerfile
+│   ├── default.conf
+│   └── ssl/ (cert.pem, privkey.pem)
+├── wordpress/
+│   ├── Dockerfile
+│   └── entrypoint.sh
+├── mariadb/
+│   ├── Dockerfile
+│   └── init.sql
+├── .env
+```
+🚀 Build & Run
+
+Using the provided Makefile, the entire stack is built and run via:
+
+```
+make clean     # Optional, resets everything, removes all volumes, deletes orphaned containers, deletes the generated SSL certificate files.
+make start     # Builds and runs containers
+make logs      # Follow service logs
+
+```
+
+🔒 Security Notes
+
+TLS must be strictly enforced (TLSv1.2 or TLSv1.3).
+
+WordPress and MariaDB passwords should be stored in .env.
+
+NGINX should block access to hidden files (e.g. .ht*).
+
+
