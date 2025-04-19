@@ -421,3 +421,130 @@ WordPress and MariaDB passwords should be stored in .env.
 NGINX should block access to hidden files (e.g. .ht*).
 
 
+**my sequence of steps was as follows**
+
+1. nginx image, Dockerfile for container and generate_cert.sh for certificates
+   
+2.mariadb image and Dockerfile for contenier , make checking for database
+
+```docker exec -it mariadb mysql -u root -p``` (it will ask for rootpassword, which is specified in MARIADB_ROOT_PASSWORD by .env file) then ```SHOW DATABASES;``` you see table. 
+You are now inside MariaDB, and you can see your automatically created database, mydb. At this point, you have a fully functional setup.
+
+3.php_fpm image , Dockerfile for container and generate_cert.sh for wordpress setings
+
+🧠 The main idea
+ WordPress requires 3 things:
+
+✅ Files (wp-config.php, index.php, etc.) → these files are in the ./wordpress_data folder.
+
+✅ PHP-FPM, which will test the .php files → this is done by the php container.
+
+✅ MariaDB, as a database.
+
+PHP-FPM (Full name: PHP FastCGI Process Manager) — this is a mechanism that allows PHP scripts to run on the server more efficiently.
+
+In simple terms,
+
+PHP-FPM is a tool that runs your PHP code (such as WordPress files), but does so in a separate process from the server's NGINX. Since NGINX itself cannot directly understand PHP, it passes the PHP files to PHP-FPM, which "translates" them and returns the result in HTML format.
+
+PHP-FPM provides things like:
+
+ Processes .php files.
+ Provides fast and secure PHP execution.
+ Allows server offload when receiving many requests.
+ 
+➡️ https://ip:4343/ displays the default WordPress page with the message Hello world!, meaning:
+
+✅ PHP is running
+
+✅ MariaDB is running
+
+✅ WP-CLI successfully loaded WordPress
+
+✅ NGINX and SSL are working
+
+➡️ https://ip:4343/wp-login.php  and login admin credentals (WP_ADMIN_USER=admin  WP_ADMIN_PASSWORD=admin123) by .env file. 
+
+ can configure wordpress.
+ 
+➡️ https://ip:4343/wp-content/static-site/index.html
+
+and there you will find my static page
+
+**The program is universal,automated and can work anywhere if you enter a valid IP in .env.**
+
+Purpose of volumes:
+The WordPress volume stores the site data, code, and images (/var/www/html).
+
+The MariaDB volume stores the database data (/var/lib/mysql).
+
+So, it turns out that all the necessary files for storing data (the WordPress database and files, and the MariaDB data) are stored in a special db_data folder defined by you.
+
+#### You DO NOT need to store the contents of your Docker db volumes on GitHub. They are regenerated when you run setup again. Focus only on your:
+
+Dockerfiles
+docker-compose.yml
+Config files
+NGINX, PHP, WordPress setups
+creat .gitignore. .gitignore should be placed at the same level, in the root of your repo, and should contain
+
+```
+# Ignore DB and WordPress volumes
+inception/db_data/
+inception/wordpress_data/
+
+# Ignore SSL certs
+inception/nginx/ssl/
+
+# Ignore env files (sensitive info)
+inception/.env
+
+# Ignore system files
+*.DS_Store
+```
+``
+git add .gitignore
+git commit -m "Ignore volumes and sensitive files"
+git push
+```
+Now the db will not be included in GitHub, and the repo will remain clean.
+
+#### some command for Docker
+1. Check WordPress loading in php container. You should see all WordPress files (wp-admin, wp-content, wp-includes, etc.)
+```
+docker exec -it php sh
+ls /var/www/html
+```
+2. Availability of WordPress files in NGINX container. If you don't see the CSS files (style.min.css, admin.css), then NGINX simply doesn't have the ability to serve those files.
+   ```
+   docker exec -it nginx sh
+   ls /var/www/html/wp-includes/css/
+
+   ```
+This will be a complete reset, to start over in a clean environment.
+
+3.Stop all containers
+```
+docker stop $(docker ps -aq)
+```
+
+4.Delete all containers
+```
+docker rm $(docker ps -aq)
+```
+
+5.Delete all images (if necessary)
+```
+docker rmi $(docker images -q)
+```
+
+6.Delete all volumes
+
+```docker volume prune -f
+```
+
+7.Clean and rebuild the project.
+```
+docker-compose build --no-cache
+docker-compose up -d
+```
