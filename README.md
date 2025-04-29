@@ -407,8 +407,34 @@ Reset everything (optional):
 ```
 make clean
 ```
+9.  Check Container Status
+    -
+    1.If it's running, you'll see its container ID, name, and status like Up (healthy).
+    ```
+    docker ps
+    ```
+    2. Run a Command Inside the Container
+```
+docker exec -it <mariadb_container_name or ID> mysql -u root -p
 
-9. Access
+```
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-30%2001-33-53.png)
+
+  Then enter the root password (set  .env file).
+  
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-30%2001-29-51.png)
+
+You can run a basic status check:  
+
+```
+STATUS;
+SHOW DATABASES;
+
+```
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-19%2023-06-42.png)
+
+
+10. Access
    ---
       
    .Visit WordPress:
@@ -430,7 +456,8 @@ make clean
    `https://<your-public-ip>:4343/wp-content/static-site/index.html`
    
    ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-15-55.png)
-   
+  
+  
 ---
 🚀 Conclusion
 
