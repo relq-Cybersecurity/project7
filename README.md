@@ -69,7 +69,8 @@ Files inside:
   . main.tf → Terraform script to create EC2
 
   . setup.sh → Bash script for server hardening
-
+  
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-05-04.png)
   ---
 3. Infrastructure with Terraform
    -
@@ -100,7 +101,7 @@ Steps:
       terraform apply -auto-approve
 
  ```
-
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-20%2002-44-59.png)
 
 **Terraform `main.tf` Summary**:
 
@@ -111,7 +112,8 @@ Steps:
    **EC2 Instances**:  `t2.micro` Linux VMs using a hardened AMI
 
    **User Data Script**: Executes `setup.sh` on instance boot
-
+   
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-06-41.png)
 
 **To deploy new instances,** rename:
 
@@ -183,6 +185,13 @@ ssh hardeneduser@<instance_ip> -p 22
 ssh -i ~/.ssh/id_rsa hardeneduser@<YOUR_SERVER_IP>
 
 ```
+
+```
+ubuntu@ip-172-31-82-111:/home$ ls
+`hardeneduser`  `ubuntu`
+```
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-19%2023-14-48.png)
+
    When admin want creat new user  on terminal run ./create_user.sh
 
 Automated User Creation Script
@@ -402,17 +411,27 @@ make clean
 
 9. Access
    ---
+      
    .Visit WordPress:
 
    `https://<your-public-ip>:4343/`
 
+    ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-13%2018-30-04.png)
+   
    .Admin login:
 
    `https://<your-public-ip>:4343/wp-login.php`
-
+   
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-18-29.png)
+   
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-18-44.png)
+   
    .Static Page:
 
    `https://<your-public-ip>:4343/wp-content/static-site/index.html`
+   
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-15-55.png)
+   
 ---
 🚀 Conclusion
 
