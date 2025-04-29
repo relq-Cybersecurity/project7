@@ -30,9 +30,9 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install -y terraform
 terraform -version
 ```
-   .Install AWS CLI:
+   .Install AWS CLI (Contributor License Agreement):
    
-   ```
+   ``` 
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./aws/install
@@ -76,6 +76,7 @@ Files inside:
   . setup.sh → Bash script for server hardening
   
 ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-05-04.png)
+
   ---
 3. Infrastructure with Terraform
    -
@@ -84,19 +85,19 @@ Files inside:
    -
 Steps:
 
-   1. Initialize Terraform:
+   1. Initialize Terraform: Downloads necessary plugins for AWS.
 
       ```
       terraform init
       ```
-   2. Plan deployment:
+   2. Plan deployment: Previews what Terraform will create.
       ```
       terraform plan
 
       ```
-   3. Apply deployment:
+   3. Apply deployment: Creates the EC2 instance. 
       ```
-      terraform apply -auto-approve
+      terraform apply -auto-approve                    //command run main.tf
 
       ```  
    4. Destroy and recreate (if needed):
