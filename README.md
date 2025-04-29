@@ -177,12 +177,6 @@ On instance launch:
 chmod +x setup.sh
 sudo ./setup.sh
 ```
- Connect:
- 
-```
-ssh hardeneduser@<instance_ip> -p 22
-```
-
 
 3.3. SSH into Instance   
 ---
