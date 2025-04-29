@@ -55,6 +55,11 @@ Enter:
 
    .Output Format (json)
 
+   . An Amazon Machine Image (AMI) is a reusable, customizable image used to launch EC2 instances with specific configurations, software, and OS. It helps simplify and standardize the creation of cloud servers.
+ 
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-06-41.png)
+
+
 2.2. Create Terraform Project
    -
   . Create project folder:
@@ -112,8 +117,7 @@ Steps:
    **EC2 Instances**:  `t2.micro` Linux VMs using a hardened AMI
 
    **User Data Script**: Executes `setup.sh` on instance boot
-   
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-06-41.png)
+
 
 **To deploy new instances,** rename:
 
