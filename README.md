@@ -57,7 +57,7 @@ Enter:
 
    . An Amazon Machine Image (AMI) is a reusable, customizable image used to launch EC2 instances with specific configurations, software, and OS. It helps simplify and standardize the creation of cloud servers.
  
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-06-41.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-03-17%2022-06-41.png)
 
 
 2.2. Create Terraform Project
@@ -75,7 +75,7 @@ Files inside:
 
   . setup.sh → Bash script for server hardening
   
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-17%2022-05-04.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-03-17%2022-05-04.png)
 
   ---
 3. Infrastructure with Terraform
@@ -107,7 +107,7 @@ Steps:
       terraform apply -auto-approve
 
  ```
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-20%2002-44-59.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-20%2002-44-59.png)
 
 **Terraform `main.tf` Summary**:
 
@@ -189,7 +189,7 @@ ssh -i ~/.ssh/id_rsa hardeneduser@<YOUR_SERVER_IP>
 ubuntu@ip-172-31-82-111:/home$ ls
 `hardeneduser`  `ubuntu`
 ```
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-03-19%2023-14-48.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-03-19%2023-14-48.png)
 
    When admin want creat new user  on terminal run ./create_user.sh
 
@@ -418,11 +418,11 @@ make clean
 docker exec -it <mariadb_container_name or ID> mysql -u root -p
 
 ```
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-30%2001-33-53.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-30%2001-33-53.png)
 
   Then enter the root password (set  .env file).
   
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-30%2001-29-51.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-30%2001-29-51.png)
 
 You can run a basic status check:  
 
@@ -431,7 +431,7 @@ STATUS;
 SHOW DATABASES;
 
 ```
-![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-19%2023-06-42.png)
+![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-19%2023-06-42.png)
 
 
 10. Access
@@ -441,21 +441,21 @@ SHOW DATABASES;
 
    `https://<your-public-ip>:4343/`
 
-    ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-13%2018-30-04.png)
+    ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-13%2018-30-04.png)
    
    .Admin login:
 
    `https://<your-public-ip>:4343/wp-login.php`
    
-   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-18-29.png)
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-17%2002-18-29.png)
    
-   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-18-44.png)
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-17%2002-18-44.png)
    
    .Static Page:
 
    `https://<your-public-ip>:4343/wp-content/static-site/index.html`
    
-   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/Screenshot%20from%202025-04-17%2002-15-55.png)
+   ![ing](https://github.com/relq-Cybersecurity/project7/blob/main/img/Screenshot%20from%202025-04-17%2002-15-55.png)
   
   
 ---
